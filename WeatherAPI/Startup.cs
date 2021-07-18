@@ -1,19 +1,14 @@
 using DataLayer;
 using DataLayer.Interfaces;
 using DataLayer.Services;
+using Domain_Layer.Interfaces;
+using Domain_Layer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WeatherAPI
 {
@@ -31,7 +26,11 @@ namespace WeatherAPI
         {
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            services.AddSwaggerGen();
             services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ICityManager, CityManager>();
+            services.AddScoped<IMeasureManager, MeasureManager>();
+            services.AddScoped<IWeatherParameterCalculator, WeatherParameterCalculator>();
         }
 
         
@@ -41,6 +40,12 @@ namespace WeatherAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WeatherAPI");
+            });
 
             app.UseHttpsRedirection();
 
