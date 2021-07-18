@@ -10,6 +10,8 @@ namespace Domain_Layer.Interfaces
 
         IEnumerable<Measure> Get();
 
+        IEnumerable<Measure> GetByCity(string name);
+
         Measure GetById(string name, DateTime dateTime);
 
         Task<bool> Add(Measure newMeasure);

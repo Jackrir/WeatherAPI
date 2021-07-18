@@ -31,6 +31,7 @@ namespace WeatherAPI
             services.AddScoped<ICityManager, CityManager>();
             services.AddScoped<IMeasureManager, MeasureManager>();
             services.AddScoped<IWeatherParameterCalculator, WeatherParameterCalculator>();
+            services.AddScoped<IWeather, Weather>();
         }
 
         

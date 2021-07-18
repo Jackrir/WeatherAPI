@@ -25,10 +25,10 @@ namespace Domain_Layer.Services
 
         public void UpdateTemperatureParametrs(IEnumerable<Measure> measures, ref City city)
         {
-            city.AverageTemperature = measures.Average(x => x.Tempereture);
-            city.MaxTemperature = measures.Max(x => x.Tempereture);
-            city.MinTemperature = measures.Min(x => x.Tempereture);
-            city.CurrentTemperature = measures.OrderByDescending(x => x.Time).First().Tempereture;
+            city.AverageTemperature = measures.Average(x => x.Temperature);
+            city.MaxTemperature = measures.Max(x => x.Temperature);
+            city.MinTemperature = measures.Min(x => x.Temperature);
+            city.CurrentTemperature = measures.OrderByDescending(x => x.Time).First().Temperature;
         }
     }
 }

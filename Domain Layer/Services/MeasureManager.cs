@@ -55,6 +55,11 @@ namespace Domain_Layer.Services
             return repository.GetRange<Measure>(x => true);
         }
 
+        public IEnumerable<Measure> GetByCity(string name)
+        {
+            return repository.GetRange<Measure>(x => x.CityName.Equals(name));
+        }
+
         public Measure GetById(string name, DateTime dateTime)
         {
             return repository.Get<Measure>(x => x.CityName.Equals(name) && x.Time == dateTime);

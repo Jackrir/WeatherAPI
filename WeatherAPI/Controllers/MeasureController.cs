@@ -46,6 +46,16 @@ namespace PresentationLayer.Controllers
 
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Measure measure)
+        {
+            if (await measureManager.Update(measure))
+                return Ok();
+            else
+                return NoContent();
+
+        }
+
         [HttpDelete("{name}/{time}")]
         public async Task<IActionResult> Delete(string name, DateTime time)
         {

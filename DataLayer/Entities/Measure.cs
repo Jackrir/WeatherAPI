@@ -15,7 +15,7 @@ namespace DataLayer.Entities
         [Key]
         public DateTime Time { get; set; }
 
-        public double Tempereture { get; set; }
+        public double Temperature { get; set; }
 
         public bool ArchiveStatus { get; set; }
         
