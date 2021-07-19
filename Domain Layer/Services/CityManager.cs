@@ -1,6 +1,8 @@
 ﻿using DataLayer.Entities;
 using DataLayer.Interfaces;
 using Domain_Layer.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,11 +12,13 @@ namespace Domain_Layer.Services
     {
         private readonly IRepository repository;
         private readonly IWeatherParameterCalculator weatherParameterCalculator;
+        private IMemoryCache cache;
 
-        public CityManager(IRepository repository, IWeatherParameterCalculator weatherParameterCalculator)
+        public CityManager(IRepository repository, IWeatherParameterCalculator weatherParameterCalculator, IMemoryCache cache)
         {
             this.repository = repository;
             this.weatherParameterCalculator = weatherParameterCalculator;
+            this.cache = cache;
         }
         public async Task<bool> Add(City newCity)
         {
@@ -22,6 +26,10 @@ namespace Domain_Layer.Services
             if(city == null)
             {
                 await repository.AddAsync<City>(newCity);
+                cache.Set(city.Name, city, new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                });
                 return true;
             }
             return false;
@@ -33,6 +41,7 @@ namespace Domain_Layer.Services
             if (currentCity != null)
             {
                 await repository.DeleteAsync<City>(currentCity);
+                cache.Remove(currentCity.Name);
                 return true;
             }
             return false;

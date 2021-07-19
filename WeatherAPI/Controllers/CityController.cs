@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 
 namespace PresentationLayer.Controllers
 {
@@ -12,10 +14,12 @@ namespace PresentationLayer.Controllers
     public class CityController : ControllerBase
     {
         private readonly ICityManager cityManager;
+        private IMemoryCache cache;
 
-        public CityController(ICityManager cityManager)
+        public CityController(ICityManager cityManager, IMemoryCache cache)
         {
             this.cityManager = cityManager;
+            this.cache = cache;
         }
 
         [HttpGet]
@@ -31,11 +35,22 @@ namespace PresentationLayer.Controllers
         [HttpGet("{name}")]
         public IActionResult GetId(string name)
         {
-            City city = cityManager.GetById(name);
-            if (city != null)
-                return Ok(city);
-            else
-                return NotFound();
+            City city;
+            if (!cache.TryGetValue(name, out city))
+            {
+                city = cityManager.GetById(name);
+                if (city != null)
+                {
+                    cache.Set(name, city, new MemoryCacheEntryOptions
+                    {
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                    });
+                    return Ok(city);
+                } 
+                else
+                    return NotFound();
+            }
+            return Ok(city);
         }
 
         [HttpPost]

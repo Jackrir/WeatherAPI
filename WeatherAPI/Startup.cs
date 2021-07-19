@@ -27,11 +27,8 @@ namespace WeatherAPI
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddSwaggerGen();
-            services.AddScoped<IRepository, Repository>();
-            services.AddScoped<ICityManager, CityManager>();
-            services.AddScoped<IMeasureManager, MeasureManager>();
-            services.AddScoped<IWeatherParameterCalculator, WeatherParameterCalculator>();
-            services.AddScoped<IWeather, Weather>();
+            services.AddMemoryCache();
+            services.AddWeatherAPIServices();
         }
 
         
@@ -56,6 +53,20 @@ namespace WeatherAPI
             {
                 endpoints.MapControllers();
             });
+        }
+
+        
+    }
+
+    public static class ServiceProvider
+    {
+        public static void AddWeatherAPIServices(this IServiceCollection services)
+        {
+            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<ICityManager, CityManager>();
+            services.AddScoped<IMeasureManager, MeasureManager>();
+            services.AddScoped<IWeatherParameterCalculator, WeatherParameterCalculator>();
+            services.AddScoped<IWeather, Weather>();
         }
     }
 }
