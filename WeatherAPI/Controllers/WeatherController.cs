@@ -1,9 +1,11 @@
 ﻿using DataLayer.Entities;
 using Domain_Layer.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using PresentationLayer.API.Requests;
 using PresentationLayer.API.Responses;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PresentationLayer.Controllers
 {
@@ -49,6 +51,21 @@ namespace PresentationLayer.Controllers
                     });
             else
                 return NotFound();
+        }
+
+        [HttpPut]
+        [HttpPut]
+        public async Task<IActionResult> Archiving([FromBody] ArchiveRequest archiveRequest)
+        {
+            await weather.Archiving(archiveRequest.CityName,archiveRequest.StartTime, archiveRequest.FinishTime);
+            return Ok();
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Unarchiving([FromBody] ArchiveRequest archiveRequest)
+        {
+            await weather.Unarchiving(archiveRequest.CityName, archiveRequest.StartTime, archiveRequest.FinishTime);
+            return Ok();
         }
     }
 }

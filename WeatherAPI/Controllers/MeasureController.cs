@@ -22,8 +22,12 @@ namespace PresentationLayer.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<Measure> cities = measureManager.Get();
-            return Ok(cities.ToArray());
+            IEnumerable<Measure> measures = measureManager.Get();
+            if (measures.Count() > 0)
+                return Ok(measures.ToArray());
+            else
+                return NotFound();
+            
         }
 
         [HttpGet("{name}/{time}")]

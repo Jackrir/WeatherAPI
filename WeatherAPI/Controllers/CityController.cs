@@ -22,7 +22,10 @@ namespace PresentationLayer.Controllers
         public IActionResult Get()
         {
             IEnumerable<City> cities = cityManager.Get();
-            return Ok(cities.ToArray());
+            if (cities.Count() > 0)
+                return Ok(cities.ToArray());
+            else
+                return NotFound();
         }
 
         [HttpGet("{name}")]
